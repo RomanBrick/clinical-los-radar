@@ -7,6 +7,9 @@ high risk of a **longer stay** — early enough for case management to act.
 **Stack:** dbt + DuckDB (SQL transformation & tests) · scikit-learn / LightGBM ·
 MIMIC-IV + eICU (PhysioNet) · Python.
 
+*A personal capstone project applying my [MIT xPRO Professional Certificate in Data
+Engineering](https://xpro.mit.edu/).*
+
 > This is an engineering/research portfolio project, **not** a clinical product.
 > Outputs support *operational* decisions (bed/case-management prioritization),
 > never treatment.
