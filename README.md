@@ -32,10 +32,11 @@ The point of the project is not a model score; it is **doing clinical ML in a wa
 you can trust, defend, and ship** — leakage discipline, calibration, external
 validation, and intellectual honesty about limitations.
 
-> **Note on this repository.** This is a public *showcase*: write-up, figures, and
-> the metric artifacts that back every number. The full implementation (dbt models,
-> training/validation code) lives in a private repository — happy to walk through it
-> live or share on request.
+> **What's in here.** The actual code — the dbt models + tests for the renal-wedge
+> lineage and the Python training / external-validation scripts — plus the write-up,
+> figures, and the metric artifacts that back every number. The **data is not
+> included** (MIMIC-IV / eICU are credentialed PhysioNet datasets and cannot be
+> redistributed); see [`docs/data_sources.md`](docs/data_sources.md).
 
 ---
 
@@ -124,27 +125,48 @@ that pool, so a 5–10% LOS reduction would repay it many times over. See
 - Anything clinical. The flag prioritizes a scarce operational resource; it does not
   recommend treatment.
 
-## What's in this showcase
+## Reproduce
+
+Data is not included (obtain MIMIC-IV / eICU via credentialed PhysioNet, build a
+DuckDB at `data/processed/mimic.duckdb`). Then:
+
+```bash
+pip install -r requirements.txt
+
+# 1) build the dbt wedge lineage + run the anti-leakage / integrity gates
+cd cdsp
+cp profiles.yml.example ~/.dbt/profiles.yml      # then point `path` at your DuckDB
+dbt build --select +training_renal_wedge
+cd ..
+
+# 2) train + isotonic-calibrate + write metric artifacts
+python scripts/train_renal_wedge_model.py --from-mart --write
+
+# 3) external validation on eICU (writes docs/eicu_external_validation.*)
+python scripts/validate_eicu_renal_wedge.py --eicu-dir data/raw/eicu
+```
+
+## Repo map
 
 | Path | What |
 |---|---|
+| `cdsp/models/` | dbt models — staging → spine → features (`labs_ed_w24h_dynamic`, `burden_ed_w24h`, `context_ed`) → `renal_wedge_features` → `training_renal_wedge` |
+| `cdsp/tests/` | anti-leakage + integrity gates (`gate_labs_ed_w24h_anti_leakage`, `gate_training_renal_wedge_subject_split_leakage`, …) |
+| `scripts/train_renal_wedge_model.py` | train + isotonic calibration + prevalence-aware operating points |
+| `scripts/validate_eicu_renal_wedge.py` | external validation on eICU |
+| `scripts/wedge_feasibility_renal.py`, `diagnose_creatinine_coverage.py`, `wedge_roi_breakeven.py` | cohort sizing, coverage analysis, ROI / break-even |
 | [`docs/wedge_onepager_renal.md`](docs/wedge_onepager_renal.md) | business one-pager (problem → wedge → economics) |
 | [`docs/radar_output_contract.md`](docs/radar_output_contract.md) | output contract + prevalence-aware targets |
 | [`docs/pilot_design_renal_wedge.md`](docs/pilot_design_renal_wedge.md) | prospective pilot design + theory of change |
-| [`docs/anti_leakage_phase3.md`](docs/anti_leakage_phase3.md) | how leakage is prevented (the design that earns trust) |
-| [`docs/data_sources.md`](docs/data_sources.md) | datasets & governance |
+| [`docs/anti_leakage_phase3.md`](docs/anti_leakage_phase3.md) | how leakage is prevented |
 | `docs/*_metrics.{json,md}`, `docs/eicu_external_validation.{json,md}` | the artifacts behind every number above |
 | `assets/` | figures |
-
-> Full pipeline code (dbt models, training & external-validation scripts) is kept in
-> a private repository to respect data-use terms and keep this page clean. Available
-> to walk through on request.
 
 ---
 
 ## Scope & data governance
 
-- No patient-level data is included — only documentation, figures, and aggregate
-  metric artifacts.
+- No patient-level data is included — code, documentation, figures, and aggregate
+  metric artifacts only.
 - MIMIC-IV / eICU accessed under credentialed PhysioNet terms; used for research only.
 - Operational decision support, not medical advice; not an FDA medical device as scoped.

@@ -1,0 +1,9 @@
+# Copy to ~/.dbt/profiles.yml, or set DBT_PROFILES_DIR to this folder.
+# Point `path` at a built MIMIC-IV DuckDB database (not included; obtain via PhysioNet).
+cdsp:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: ../data/processed/mimic.duckdb
+      threads: 1

@@ -1,0 +1,47 @@
+version: 2
+
+models:
+  - name: renal_wedge_features
+    description: "0-24h ED-anchored lab dynamics + burden + context, with renal cohort flag."
+    columns:
+      - name: hadm_id
+        tests:
+          - not_null
+          - unique
+      - name: subject_id
+        tests:
+          - not_null
+      - name: renal_dysfunction_flag
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: [0, 1]
+
+  - name: training_renal_wedge
+    description: "Renal cohort features + long-stay label + subject split (model input)."
+    columns:
+      - name: hadm_id
+        tests:
+          - not_null
+          - unique
+      - name: subject_id
+        tests:
+          - not_null
+      - name: split
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['train', 'calibration', 'test']
+      - name: long_stay_flag
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: [0, 1]
+      - name: renal_dysfunction_flag
+        tests:
+          - accepted_values:
+              arguments:
+                values: [1]

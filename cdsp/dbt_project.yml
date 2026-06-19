@@ -1,0 +1,29 @@
+name: 'cdsp'
+version: '1.0.0'
+
+# dbt profile (see profiles.yml.example)
+profile: 'cdsp'
+
+model-paths: ["models"]
+test-paths: ["tests"]
+macro-paths: ["macros"]
+
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+vars:
+  duckdb_memory_limit: '24GB'
+  duckdb_threads: 1
+
+models:
+  cdsp:
+    staging:
+      +materialized: view
+      +schema: staging
+    intermediate:
+      +materialized: view
+      +schema: intermediate
+    marts:
+      +materialized: view
+      +schema: marts

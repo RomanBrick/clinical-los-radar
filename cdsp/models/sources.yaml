@@ -1,0 +1,21 @@
+version: 2
+
+sources:
+  - name: raw
+    description: "Raw MIMIC-IV tables exposed as DuckDB views over Parquet."
+    schema: raw
+    tables:
+      - name: admissions
+        description: "Hospital admissions (one row per hadm_id)."
+      - name: patients
+        description: "Patient demographics (one row per subject_id)."
+      - name: edstays
+        description: "ED stays (one row per stay_id, links to hadm_id for inpatient admissions)."
+      - name: labevents
+        description: "Laboratory events (many rows per hadm_id)."
+      - name: d_labitems
+        description: "Lab item dictionary mapping itemid -> label."
+      - name: ed_vitalsign
+        description: "ED vital signs (many rows per stay_id). Columns: subject_id, stay_id, charttime, temperature, heartrate, resprate, o2sat, sbp, dbp, rhythm, pain."
+      - name: ed_triage
+        description: "ED triage (one row per stay_id, first assessment). Columns: subject_id, stay_id, temperature, heartrate, resprate, o2sat, sbp, dbp, etc. (no charttime). Used as first snapshot at ed_intime."

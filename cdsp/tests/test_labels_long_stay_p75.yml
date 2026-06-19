@@ -1,0 +1,49 @@
+version: 2
+
+models:
+  - name: labels_long_stay_p75
+    description: "Phase 3 outcome label: longer stay (LOS >= P75)"
+    columns:
+      - name: hadm_id
+        description: "Hospital admission ID"
+        tests:
+          - unique
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('encounter_spine_ed_inpatient')
+                field: hadm_id
+      
+      - name: subject_id
+        description: "Patient ID"
+        tests:
+          - not_null
+      
+      - name: long_stay_flag
+        description: "Binary label: 1 if longer stay, 0 otherwise"
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: [0, 1]
+      
+      - name: los_days
+        description: "Actual length of stay in days (for debugging)"
+        tests:
+          - not_null
+      
+      - name: p75_los_days
+        description: "P75 threshold applied"
+        tests:
+          - not_null
+
+  - name: long_stay_threshold_p75
+    description: "P75 threshold metadata (1 row)"
+    columns:
+      - name: p75_los_days
+        tests:
+          - not_null
+      
+      - name: cohort_size
+        tests:
+          - not_null
