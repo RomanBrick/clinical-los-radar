@@ -1,0 +1,119 @@
+{
+  "dataset": "eICU (multi-center, retrained recipe)",
+  "window_min": 1440,
+  "renal_definition": "creatinine_max>1.3 OR bun_max>20.0",
+  "cohort_size": 84507,
+  "prolonged_rate": 0.2500147916740625,
+  "p75_hosp_los_days": 12.359027777777778,
+  "splits": {
+    "train": 50654,
+    "cal": 16912,
+    "test": 16941
+  },
+  "n_features": 121,
+  "logistic": {
+    "model": "Logistic baseline",
+    "calibration_method": "isotonic",
+    "test_roc_auc": 0.6577441188245461,
+    "test_pr_auc": 0.3793281689588964,
+    "test_brier": 0.17851889495923495,
+    "test_ece": 0.012076474881995149,
+    "test_base_rate": 0.25429431556578713,
+    "operating_points": [
+      {
+        "q": 0.05,
+        "k": 847,
+        "precision": 0.5029515938606848,
+        "recall": 0.0988857938718663,
+        "lift": 1.9778326257181664,
+        "recall_ceiling": 0.19662256267409473
+      },
+      {
+        "q": 0.1,
+        "k": 1694,
+        "precision": 0.4669421487603306,
+        "recall": 0.18361188486536675,
+        "lift": 1.8362272381960911,
+        "recall_ceiling": 0.39324512534818945
+      },
+      {
+        "q": 0.2,
+        "k": 3388,
+        "precision": 0.42384887839433294,
+        "recall": 0.3333333333333333,
+        "lift": 1.6667650531286895,
+        "recall_ceiling": 0.7864902506963789
+      }
+    ]
+  },
+  "gbm": {
+    "model": "HistGradientBoosting",
+    "calibration_method": "isotonic",
+    "test_roc_auc": 0.700045673734345,
+    "test_pr_auc": 0.435204123505314,
+    "test_brier": 0.1709275335924676,
+    "test_ece": 0.008224523819394244,
+    "test_base_rate": 0.25429431556578713,
+    "operating_points": [
+      {
+        "q": 0.05,
+        "k": 847,
+        "precision": 0.6033057851239669,
+        "recall": 0.11861652739090064,
+        "lift": 2.3724705909436223,
+        "recall_ceiling": 0.19662256267409473
+      },
+      {
+        "q": 0.1,
+        "k": 1694,
+        "precision": 0.5525383707201889,
+        "recall": 0.21727019498607242,
+        "lift": 2.17283020853545,
+        "recall_ceiling": 0.39324512534818945
+      },
+      {
+        "q": 0.2,
+        "k": 3388,
+        "precision": 0.4651711924439197,
+        "recall": 0.3658310120705664,
+        "lift": 1.8292630388097595,
+        "recall_ceiling": 0.7864902506963789
+      }
+    ]
+  },
+  "mimic_gbm_reference": {
+    "model": "HistGradientBoosting",
+    "calibration_method": "isotonic",
+    "test_roc_auc": 0.7361000134365229,
+    "test_pr_auc": 0.6419835871516961,
+    "test_brier": 0.20146130303399665,
+    "test_ece": 0.01813276182524313,
+    "test_base_rate": 0.42234032804911575,
+    "operating_points": [
+      {
+        "q": 0.05,
+        "k": 546,
+        "precision": 0.8223443223443223,
+        "recall": 0.09741809503146019,
+        "lift": 1.9471129506929028,
+        "recall_ceiling": 0.1183879366456932
+      },
+      {
+        "q": 0.1,
+        "k": 1091,
+        "precision": 0.7616865261228231,
+        "recall": 0.180299414189629,
+        "lift": 1.8034899239701383,
+        "recall_ceiling": 0.2367758732913864
+      },
+      {
+        "q": 0.2,
+        "k": 2183,
+        "precision": 0.7095739807604214,
+        "recall": 0.3360815795183337,
+        "lift": 1.6800999895939421,
+        "recall_ceiling": 0.4735517465827728
+      }
+    ]
+  }
+}
